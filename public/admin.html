@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de administración | CineFinder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><i class="fa-solid fa-shield-halved"></i> Admin</div>
+        <div class="nav-actions">
+            <a class="btn-nav" href="/" style="text-decoration:none;"><i class="fa-solid fa-arrow-left"></i> <span class="txt">Volver a la página</span></a>
+        </div>
+    </nav>
+
+    <div class="admin-wrap">
+        <h1>Panel de administración</h1>
+        <p style="color: var(--text-muted);" id="admin-saludo">Cargando...</p>
+
+        <div class="admin-tabs">
+            <button class="active" data-tab="resumen">📊 Resumen</button>
+            <button data-tab="usuarios">👥 Usuarios</button>
+            <button data-tab="resenas">💬 Reseñas</button>
+            <button data-tab="destacadas">👑 Destacadas</button>
+        </div>
+
+        <section id="tab-resumen"></section>
+
+        <section id="tab-usuarios" class="oculto">
+            <div class="barra-herr">
+                <input id="buscar-usuario" placeholder="Buscar por nombre o correo...">
+                <button class="btn-principal" onclick="cargarUsuarios()">Buscar</button>
+            </div>
+            <div class="tabla-wrap"><table>
+                <thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Favoritas</th><th>Reseñas</th><th>Registro</th><th>Acciones</th></tr></thead>
+                <tbody id="tabla-usuarios"></tbody>
+            </table></div>
+        </section>
+
+        <section id="tab-resenas" class="oculto">
+            <div class="tabla-wrap"><table>
+                <thead><tr><th>Película</th><th>Autor</th><th>★</th><th>Comentario</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody id="tabla-resenas"></tbody>
+            </table></div>
+        </section>
+
+        <section id="tab-destacadas" class="oculto">
+            <p style="color: var(--text-muted); margin-bottom: 12px;">Busca una película y añádela a la sección "Selección de CineFinder" de la portada.</p>
+            <div class="barra-herr">
+                <input id="buscar-dest" placeholder="Buscar película en TMDB..." onkeydown="if(event.key==='Enter') buscarDestacada()">
+                <button class="btn-principal" onclick="buscarDestacada()">Buscar</button>
+            </div>
+            <div id="res-dest"></div>
+            <h3 style="margin: 24px 0 4px;">Actualmente destacadas</h3>
+            <div class="dest-grid" id="grid-dest"></div>
+        </section>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

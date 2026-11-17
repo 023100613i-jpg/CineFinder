@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineFinder | Tu universo de películas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-film"></i> CineFinder</div>
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="titulo" placeholder="Buscar película..." oninput="buscar()" autocomplete="off">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+            </div>
+            <div id="lista-resultados"></div>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-nav destacado" onclick="abrirModalAnimo()"><i class="fa-solid fa-dice"></i> <span class="txt">Sorpréndeme</span></button>
+            <div id="nav-usuario"></div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg" id="hero-bg-1"></div>
+        <div class="hero-bg" id="hero-bg-2"></div>
+        <div class="hero-content">
+            <h1>Descubre tu próxima película favorita.</h1>
+            <p>Explora tendencias, busca títulos, guarda tus favoritas y deja que nuestra Inteligencia Artificial te recomiende qué ver hoy.</p>
+            <div class="hero-controls">
+                <button class="btn-hero" onclick="abrirDetalles(peliculaHeroId)">
+                    <i class="fa-solid fa-play"></i> <span id="btn-hero-texto">Ver Ahora</span>
+                </button>
+                <div class="hero-dots" id="hero-dots"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILTROS -->
+    <div class="filtros-container">
+        <button class="btn-filtro active" onclick="cambiarFiltro(this, '')">Todas</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '878')">Ciencia ficción</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '18')">Drama</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '53')">Thriller</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '28')">Acción</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '80')">Crimen</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '16')">Animación</button>
+        <button class="btn-filtro" onclick="cambiarFiltro(this, '35')">Comedia</button>
+    </div>
+
+    <main id="main"></main>
+
+    <!-- MODAL DETALLES -->
+    <div class="modal-overlay" id="modal-resultado">
+        <div class="modal-content">
+            <button class="close-btn" onclick="cerrarModal('modal-resultado')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-img"><img id="poster" src="" alt="Póster"></div>
+            <div class="modal-info">
+                <h2 id="nombre"></h2>
+                <div class="tags" id="tags"></div>
+                <div class="acciones-peli" id="acciones-peli"></div>
+                <p class="desc"><strong>Sinopsis:</strong> <span id="sinopsis"></span></p>
+                <p class="desc"><strong>Reparto:</strong> <span id="actores"></span></p>
+                <div id="streaming-container" style="font-size: 0.9rem;"></div>
+                <div class="ia-resena">
+                    <h3><i class="fa-solid fa-robot"></i> Reseña generada por IA</h3>
+                    <p id="resena"></p>
+                </div>
+                <div class="bloque-resenas">
+                    <h3><i class="fa-solid fa-comments"></i> Opiniones de la comunidad <span id="comunidad-resumen" class="tag comunidad oculto"></span></h3>
+                    <div id="form-resena"></div>
+                    <div id="lista-resenas"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-video">
+        <div class="video-modal">
+            <button class="btn-close-video" onclick="cerrarTrailer()"><i class="fa-solid fa-circle-xmark"></i></button>
+            <iframe id="iframe-trailer" src="" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>        </div>
+    </div>
+
+    <!-- MODAL SORPRÉNDEME -->
+    <div id="modal-animo" class="modal-overlay">
+        <div class="modal-box">
+            <button class="btn-cerrar" onclick="cerrarModalAnimo()">&times;</button>
+            <h2>¿Cómo te sientes hoy? 🍿</h2>
+            <p style="color: var(--text-muted); margin-top: 5px;">Elige tu estado de ánimo y la IA seleccionará películas para ti:</p>
+            <div class="grid-animos">
+                <button onclick="pedirPorAnimo('Feliz y alegre')">😊 Feliz</button>
+                <button onclick="pedirPorAnimo('Estresado, necesito desestresarme')">🤯 Estresado</button>
+                <button onclick="pedirPorAnimo('Triste o melancólico')">😢 Melancólico</button>
+                <button onclick="pedirPorAnimo('Con ganas de mucha acción y adrenalina')">🔥 Adrenalina</button>
+                <button onclick="pedirPorAnimo('Con ganas de algo de misterio y suspenso')">🧩 Misterio</button>
+            </div>
+            <div id="contenedor-animo-resultados" class="animo-resultados"></div>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN / REGISTRO -->
+    <div class="modal-overlay" id="modal-auth">
+        <div class="modal-form">
+            <button class="btn-cerrar" onclick="cerrarModal('modal-auth')">&times;</button>
+            <h2 id="auth-titulo">Bienvenido</h2>
+            <p class="sub" id="auth-sub">Inicia sesión para guardar tus películas.</p>
+            <div class="tabs">
+                <button id="tab-login" class="active" onclick="cambiarTabAuth('login')">Iniciar sesión</button>
+                <button id="tab-registro" onclick="cambiarTabAuth('registro')">Crear cuenta</button>
+            </div>
+            <form id="form-auth" onsubmit="enviarAuth(event)">
+                <div class="campo oculto" id="campo-nombre"><label for="auth-nombre">Nombre</label><input id="auth-nombre" maxlength="60" autocomplete="name"></div>
+                <div class="campo"><label for="auth-email">Correo electrónico</label><input id="auth-email" type="email" required autocomplete="email"></div>
+                <div class="campo"><label for="auth-pass">Contraseña</label><input id="auth-pass" type="password" required minlength="8" autocomplete="current-password"></div>
+                <div class="msg-error" id="auth-error"></div>
+                <button class="btn-principal" id="auth-btn" type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PERFIL -->
+    <div class="modal-overlay" id="modal-perfil">
+        <div class="modal-form" style="max-width: 520px;">
+            <button class="btn-cerrar" onclick="cerrarModal('modal-perfil')">&times;</button>
+            <div id="perfil-contenido"></div>
+        </div>
+    </div>
+
+    <!-- CHAT IA -->
+    <div class="chat-toggle" onclick="toggleChat()"><i class="fa-solid fa-comment-dots"></i></div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header"><span><i class="fa-solid fa-robot" style="color: var(--accent);"></i> CineBot IA</span><i class="fa-solid fa-chevron-down" style="cursor: pointer;" onclick="toggleChat()"></i></div>
+        <div class="chat-body" id="chat-mensajes"><div class="msg msg-ia">¡Hola! Soy tu crítico de cine. ¿Qué película buscas hoy?</div></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Pregúntame algo..." onkeypress="if(event.key === 'Enter') preguntarIA()">
+            <button onclick="preguntarIA()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <script src="/js/app.js"></script>
+</body>
+</html>
